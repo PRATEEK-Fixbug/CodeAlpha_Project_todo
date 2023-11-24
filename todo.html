@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #todo-container {
+            width: 400px;
+            background-color: #555;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #777;
+            border-radius: 4px;
+            color: #333;
+            background-color: #eee;
+        }
+
+        select {
+            width: 74%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #777;
+            border-radius: 4px;
+            color: #333;
+            background-color: #eee;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        li {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #777;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        li input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        #progress-bar {
+            margin-top: 20px;
+            height: 20px;
+            background-color: #444;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar div {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="todo-container">
+        <h1>To-Do List</h1>
+
+        <label for="taskInput">Task:</label>
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+
+        <label for="taskCategory">Category:</label>
+        <select id="taskCategory">
+            <option value="Personal">Personal</option>
+            <option value="Work">Work</option>
+            <option value="Study">Study</option>
+        </select>
+
+        <button onclick="addTask()">Add Task</button>
+
+        <ul id="taskList"></ul>
+
+        <div id="progress-bar">
+            <div></div>
+        </div>
+    </div>
+
+    <script>
+        function addTask() {
+            var taskInput = document.getElementById('taskInput');
+            var taskCategory = document.getElementById('taskCategory');
+            var taskList = document.getElementById('taskList');
+            var progressBar = document.getElementById('progress-bar').getElementsByTagName('div')[0];
+
+            if (taskInput.value.trim() === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            var li = document.createElement('li');
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.onchange = updateProgressBar;
+            li.appendChild(checkbox);
+
+            var taskText = document.createElement('span');
+            taskText.textContent = `${taskInput.value} (${taskCategory.value})`;
+            li.appendChild(taskText);
+
+            var deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.onclick = function() {
+                li.parentNode.removeChild(li);
+                updateProgressBar();
+            };
+            li.appendChild(deleteBtn);
+
+            taskList.appendChild(li);
+            taskInput.value = '';
+
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            var totalTasks = document.querySelectorAll('input[type="checkbox"]').length;
+            var completedTasks = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            var progressBar = document.getElementById('progress-bar').getElementsByTagName('div')[0];
+            var percentage = (completedTasks / totalTasks) * 100;
+            progressBar.style.width = percentage + '%';
+        }
+    </script>
+
+</body>
+</html>
